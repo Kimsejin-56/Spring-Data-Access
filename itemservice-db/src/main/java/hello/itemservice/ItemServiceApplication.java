@@ -32,15 +32,16 @@ public class ItemServiceApplication {
 	}
 
 
-    @Bean
-    @Profile("test")
-    public DataSource dataSource() {
-        log.info("메모리 데이터베이스 초기화");
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:mem:db;DB_CLOSE_DELAY=-1");
-        dataSource.setUsername("sa");
-        dataSource.setPassword("");
-        return dataSource;
-    }
+    //스프링 부트는 데이터베이스에 대한 별다른 설정 없으면 임베디드 데이터베이스 사용
+//    @Bean
+//    @Profile("test")
+//    public DataSource dataSource() {
+//        log.info("메모리 데이터베이스 초기화");
+//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//        dataSource.setDriverClassName("org.h2.Driver");
+//        dataSource.setUrl("jdbc:h2:mem:db;DB_CLOSE_DELAY=-1");
+//        dataSource.setUsername("sa");
+//        dataSource.setPassword("");
+//        return dataSource;
+//    }
 }
