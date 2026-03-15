@@ -9,8 +9,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.List;
@@ -21,23 +23,27 @@ import static org.assertj.core.api.Assertions.assertThat;
  * 테스트에서 중요한 원칙
  * - 테스트는 다른 테스트와 격리
  * - 테스트는 반복 실행 가능
+ *
+ * @Transactional이 테스트에 있으면 스프링은 테스트를 트랜잭션 안에서 실행하고,
+ * 테스트가 끝나면 트랜잭션을 자동 롤백
  */
+@Transactional
 @SpringBootTest
 class ItemRepositoryTest {
 
     @Autowired
     ItemRepository itemRepository;
 
-    //트랜잭션 관련 코드
-    @Autowired
-    PlatformTransactionManager transactionManager;
-    TransactionStatus status;
-
-    @BeforeEach
-    void beforEach() {
-        //트랜잭션 시작
-        status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-    }
+//    //트랜잭션 관련 코드
+//    @Autowired
+//    PlatformTransactionManager transactionManager;
+//    TransactionStatus status;
+//
+//    @BeforeEach
+//    void beforEach() {
+//        //트랜잭션 시작
+//        status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//    }
 
     @AfterEach
     void afterEach() {
@@ -45,11 +51,12 @@ class ItemRepositoryTest {
         if (itemRepository instanceof MemoryItemRepository) {
             ((MemoryItemRepository) itemRepository).clearStore();
         }
-
-        //트랜잭션 롤백
-        transactionManager.rollback(status);
+//        //트랜잭션 롤백
+//        transactionManager.rollback(status);
     }
 
+//    @Commit //강제 커밋
+//    @Transactional
     @Test
     void save() {
         //given
