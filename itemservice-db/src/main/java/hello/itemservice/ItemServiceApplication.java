@@ -12,24 +12,24 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
-
+@Slf4j
 //@Import(MemoryConfig.class)
 //@Import(JdbcTemplateV1Config.class)
 //@Import(JdbcTemplateV2Config.class)
-@Slf4j
-@Import(JdbcTemplateV3Config.class)
+//@Import(JdbcTemplateV3Config.class)
+@Import(V2Config.class)
 @SpringBootApplication(scanBasePackages = "hello.itemservice.web")
 public class ItemServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ItemServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ItemServiceApplication.class, args);
+    }
 
-	@Bean
-	@Profile("local")
-	public TestDataInit testDataInit(ItemRepository itemRepository) {
-		return new TestDataInit(itemRepository);
-	}
+    @Bean
+    @Profile("local")
+    public TestDataInit testDataInit(ItemRepository itemRepository) {
+        return new TestDataInit(itemRepository);
+    }
 
 
     //스프링 부트는 데이터베이스에 대한 별다른 설정 없으면 임베디드 데이터베이스 사용
