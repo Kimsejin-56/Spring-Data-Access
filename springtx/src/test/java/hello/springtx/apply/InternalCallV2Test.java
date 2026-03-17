@@ -17,6 +17,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  *
  * @Transaction은 접근 지정자 public만 걸림
  * 다른 접근 지정자는 @Transaction달면 에러 안나고 무시 (주의!)
+ * But 스프링 부트 3.0 부터는 default, protected도 트랜잭션 적용 가능 즉 private만 트랜잭션 적용 X
  */
 @Slf4j
 @SpringBootTest
