@@ -142,5 +142,25 @@ class MemberServiceTest {
         assertTrue(logRepository.find(username).isEmpty());
     }
 
+    /**
+     * MemberService @Transactional:ON
+     * MemberRepository @Transactional:ON
+     * LogRepository @Transactional:ON Exception
+     *
+     * REQUIRES_NEW 속성으로 log가 기존 트랜잭션에 참여하지 않고 신규 트랜잭션 만듬
+     * 그래서 log만 롤백하고 member는 커밋해서 잘 저장(2개의 물리 트랜잭션으로 분리)
+     * 이것의 문제점! HTTP 요청에 동시에 2개의 커넥션 사용 (성능 저하)
+     */
+    @Test
+    void recoverException_success() {
+        //given
+        String username = "로그예외_recoverException_success";
 
+        //when
+        memberService.joinV2(username);
+
+        //then: member 저장, log 롤백
+        assertTrue(memberRepository.find(username).isPresent());
+        assertTrue(logRepository.find(username).isEmpty());
+    }
 }
