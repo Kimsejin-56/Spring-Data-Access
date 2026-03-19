@@ -74,4 +74,26 @@ class MemberServiceTest {
         assertTrue(memberRepository.find(username).isPresent());
         assertTrue(logRepository.find(username).isPresent());
     }
+
+    /**
+     * MemberService @Transactional:ON
+     * MemberRepository @Transactional:ON
+     * LogRepository @Transactional:ON
+     *
+     * memberService는 신규 트랜잭션 - 물리 트랜잭션 관리(물리 커밋, 물리 롤백)
+     * memberRepository는 신규 트랜잭션 X - 논리 트랜잭션(논리 커밋, 논리 롤백)
+     * logRepository는 신규 트랜잭션 X - 논리 트랜잭션(논리 커밋, 논리 롤백)
+     */
+    @Test
+    void outerTxOn_success() {
+        //given
+        String username = "outerTxOn_success";
+
+        //when
+        memberService.joinV1(username);
+
+        //then: 모든 데이터가 정상 저장
+        assertTrue(memberRepository.find(username).isPresent());
+        assertTrue(logRepository.find(username).isPresent());
+    }
 }
