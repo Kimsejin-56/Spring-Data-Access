@@ -52,7 +52,7 @@ class MemberServiceTest {
         assertThatThrownBy(() -> memberService.joinV1(username))
                 .isInstanceOf(RuntimeException.class);
 
-        //then: 완전히 롤백되지 않고, member 데이터가 남아서 저장
+        //then: 완전히 롤백되지 않고, member 데이터가 남아서 저장(데이터 정합성 문제)
         assertTrue(memberRepository.find(username).isPresent());
         assertTrue(logRepository.find(username).isEmpty());
     }
@@ -96,4 +96,27 @@ class MemberServiceTest {
         assertTrue(memberRepository.find(username).isPresent());
         assertTrue(logRepository.find(username).isPresent());
     }
+
+    /**
+     * MemberService @Transactional:ON
+     * MemberRepository @Transactional:ON
+     * LogRepository @Transactional:ON Exception
+     *
+     * 이 경우 logRepository에서 터진 런타임 예외를 잡지 않기 때문에 memberService에서도 런타임 에러가 발생
+     * 그래서 결국 logRepository, memberService 둘다 롤백
+     */
+    @Test
+    void outerTxOn_fail() {
+        //given
+        String username = "로그예외_outerTxOn_fail";
+
+        //when
+        assertThatThrownBy(() -> memberService.joinV1(username))
+                .isInstanceOf(RuntimeException.class);
+
+        //then: 모든 데이터 롤백
+        assertTrue(memberRepository.find(username).isEmpty());
+        assertTrue(logRepository.find(username).isEmpty());
+    }
+
 }
